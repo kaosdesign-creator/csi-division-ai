@@ -86,9 +86,7 @@ function loadPdfJs() {
 
 async function renderPage(pdfData, pageNum, scale = 2.0) {
   const lib = await loadPdfJs();
-  // Always pass a fresh copy so the ArrayBuffer is never detached
-  const copy = pdfData.slice(0);
-  const pdf = await lib.getDocument({ data: copy }).promise;
+  const pdf = await lib.getDocument({ data: pdfData }).promise;
   const page = await pdf.getPage(pageNum);
   const vp = page.getViewport({ scale });
   const canvas = document.createElement("canvas");
@@ -99,8 +97,7 @@ async function renderPage(pdfData, pageNum, scale = 2.0) {
 
 async function getPdfPageCount(pdfData) {
   const lib = await loadPdfJs();
-  const copy = pdfData.slice(0);
-  const pdf = await lib.getDocument({ data: copy }).promise;
+  const pdf = await lib.getDocument({ data: pdfData }).promise;
   return pdf.numPages;
 }
 
@@ -230,7 +227,7 @@ export default function App() {
     setProjectName(f.name.replace(/\.pdf$/i, "").replace(/_/g, " "));
     try {
       const buf = await f.arrayBuffer();
-      const uint8 = new Uint8Array(buf.slice(0));
+      const uint8 = new Uint8Array(buf);
       setPdfData(uint8);
       const count = await getPdfPageCount(uint8);
       setPageCount(count);
