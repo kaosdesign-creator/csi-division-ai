@@ -102,7 +102,7 @@ function PageHeader({ title, sub, right }) {
   return (
     <div style={{ textAlign:"center", padding:"40px 24px 28px", borderBottom:`1px solid ${C.warm3}`, background:C.cream, position:"relative" }}>
       <img src={`data:image/png;base64,${LOGO_B64}`} alt="Kaos Design Werks"
-        style={{ width:"72px", height:"72px", objectFit:"contain", borderRadius:"50%", marginBottom:"14px", display:"block", margin:"0 auto 14px" }} />
+        style={{ width:"200px", height:"200px", objectFit:"contain", borderRadius:"50%", marginBottom:"14px", display:"block", margin:"0 auto 14px" }} />
       <div style={{ fontFamily:"Georgia,serif", fontSize:"22px", fontWeight:"700", color:C.brown1, marginBottom:"3px", letterSpacing:"2px" }}>CSI DIVISION AI</div>
       <div style={{ fontSize:"11px", letterSpacing:"2px", color:C.brown4, textTransform:"uppercase" }}>Powered by Kaos Design Werks</div>
       {title && <div style={{ fontSize:"13px", color:C.brown3, marginTop:"6px" }}>{title}</div>}
@@ -140,7 +140,7 @@ export default function App() {
       const count = await getPdfPageCount(uint8);
       setPageCount(count);
       const thumbs = {};
-      for (let i = 1; i <= Math.min(6, count); i++) {
+      for (let i = 1; i <= Math.min(20, count); i++) {
         const { base64 } = await renderPage(uint8, i, 0.4);
         thumbs[i] = base64;
       }
@@ -176,7 +176,7 @@ export default function App() {
       setProgressMsg(`Analyzing page ${pageNum}...`); setProgressCurrent(i);
       try {
         const { base64 } = await renderPage(pdfData, pageNum, 2.0);
-        const res = await fetch("https://api.anthropic.com/v1/messages", {
+        const res = await fetch("/api/analyze", {
           method:"POST", headers:{"Content-Type":"application/json"},
           body: JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:4000, system:SYSTEM_PROMPT,
             messages:[{role:"user", content:[
